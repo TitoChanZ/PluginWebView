@@ -118,6 +118,22 @@ HRESULT MeasureWebView::CreateControllerHandler(HRESULT result, ICoreWebView2Con
 		return S_FALSE;
 	}
 
+	if (!script.empty())
+	{
+		std::wifstream input1(script);
+		if (input1)
+		{
+			std::wstring content((std::istreambuf_iterator<wchar_t>(input1)), {});
+			RmLog(LOG_WARNING, L"Inyectando ScriptFile...");
+			RmLog(LOG_WARNING, content.c_str());
+			view->AddScriptToExecuteOnDocumentCreated(content.c_str(), nullptr);
+		}
+		else
+		{
+			RmLog(LOG_ERROR, L"No se pudo abrir el ScriptFile.");
+		}
+	}
+
 	// Settings for the webview
 	ICoreWebView2Settings* settings;
 	view->get_Settings(&settings);
